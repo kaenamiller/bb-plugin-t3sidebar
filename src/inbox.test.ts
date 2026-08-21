@@ -8,6 +8,7 @@ import {
   partitionPinned,
   searchThreadsByTitle,
   sortByCreatedAtDescending,
+  sortInboxThreads,
   threadDisplayTitle,
   visibleInboxThreads,
 } from "./inbox";
@@ -86,6 +87,31 @@ describe("sortByCreatedAtDescending", () => {
     ];
     sortByCreatedAtDescending(input);
     expect(input.map((t) => t.id)).toEqual(["a", "b"]);
+  });
+});
+
+describe("sortInboxThreads", () => {
+  it("matches creation-time sort when unread-to-top is off", () => {
+    const threads = [
+      thread({ id: "read-old", createdAt: 1, isUnread: false }),
+      thread({ id: "unread-new", createdAt: 3, isUnread: true }),
+      thread({ id: "read-new", createdAt: 2, isUnread: false }),
+    ];
+    expect(
+      sortInboxThreads(threads, { unreadToTop: false }).map((t) => t.id),
+    ).toEqual(["unread-new", "read-new", "read-old"]);
+  });
+
+  it("puts unread cards first while keeping newest-first within each group", () => {
+    const threads = [
+      thread({ id: "read-old", createdAt: 1, isUnread: false }),
+      thread({ id: "unread-old", createdAt: 2, isUnread: true }),
+      thread({ id: "read-new", createdAt: 4, isUnread: false }),
+      thread({ id: "unread-new", createdAt: 3, isUnread: true }),
+    ];
+    expect(
+      sortInboxThreads(threads, { unreadToTop: true }).map((t) => t.id),
+    ).toEqual(["unread-new", "unread-old", "read-new", "read-old"]);
   });
 });
 

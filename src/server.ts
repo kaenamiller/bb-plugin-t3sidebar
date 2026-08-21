@@ -116,6 +116,13 @@ export const t3sidebarSettings = {
       "Tint each card with a project-colored left stripe and project name while viewing all projects.",
     default: true,
   },
+  unreadToTop: {
+    type: "boolean" as const,
+    label: "Unread threads to top",
+    description:
+      "Sort unread inbox and pinned cards above read ones. Each group still orders by creation time, newest first.",
+    default: false,
+  },
   unreadTitleWeight: {
     type: "select" as const,
     label: "Unread title weight",

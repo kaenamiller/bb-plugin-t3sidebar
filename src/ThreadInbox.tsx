@@ -29,6 +29,7 @@ import {
   parseUnreadTitleWeight,
   PROJECT_COLOR_STRIPES_SETTING_KEY,
   UNREAD_TITLE_WEIGHT_SETTING_KEY,
+  UNREAD_TO_TOP_SETTING_KEY,
 } from "./appearance-settings";
 import { TRAILING_GLYPH_BOX_CLASS } from "./StatusSlot";
 import {
@@ -37,6 +38,7 @@ import {
   partitionPinned,
   searchThreadsByTitle,
   sortByCreatedAtDescending,
+  sortInboxThreads,
   visibleInboxThreads,
 } from "./inbox";
 
@@ -72,6 +74,10 @@ export function ThreadInbox({
   );
   const unreadTitleWeight = parseUnreadTitleWeight(
     settingsValues?.[UNREAD_TITLE_WEIGHT_SETTING_KEY],
+  );
+  const unreadToTop = parseBooleanSetting(
+    settingsValues?.[UNREAD_TO_TOP_SETTING_KEY],
+    false,
   );
   const [scope, setScope] = useState<string>(ALL_PROJECTS);
   // One clock for every card in a render, quantized to the minute so the
@@ -116,9 +122,10 @@ export function ThreadInbox({
       else active.push(thread);
     }
     const split = partitionPinned(active);
+    const inboxSort = { unreadToTop };
     return {
-      pinned: sortByCreatedAtDescending(split.pinned),
-      inbox: sortByCreatedAtDescending(split.inbox),
+      pinned: sortInboxThreads(split.pinned, inboxSort),
+      inbox: sortInboxThreads(split.inbox, inboxSort),
       // Soonest wake first: "what comes back next" is the shelf's question.
       snoozed: [...onSnoozeShelf].sort(
         (left, right) =>
@@ -126,7 +133,7 @@ export function ThreadInbox({
       ),
       settled: sortByCreatedAtDescending(onSettledShelf),
     };
-  }, [lifecycle, scope, searchQuery, threads]);
+  }, [lifecycle, scope, searchQuery, threads, unreadToTop]);
 
   const scopeLabel =
     scope === ALL_PROJECTS

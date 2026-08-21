@@ -1,5 +1,6 @@
 export const CARD_DIVIDERS_SETTING_KEY = "cardDividers";
 export const PROJECT_COLOR_STRIPES_SETTING_KEY = "projectColorStripes";
+export const UNREAD_TO_TOP_SETTING_KEY = "unreadToTop";
 export const UNREAD_TITLE_WEIGHT_SETTING_KEY = "unreadTitleWeight";
 
 export const UNREAD_TITLE_WEIGHTS = [

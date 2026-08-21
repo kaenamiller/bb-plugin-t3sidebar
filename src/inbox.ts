@@ -17,6 +17,32 @@ export function sortByCreatedAtDescending<
   );
 }
 
+/**
+ * Inbox sort for pinned and active cards. By default every row keeps its
+ * creation-time place; when unread-to-top is on, unread rows rise above read
+ * ones while each group still sorts newest-first.
+ */
+export function sortInboxThreads<
+  T extends {
+    readonly id: string;
+    readonly createdAt: number;
+    readonly isUnread: boolean;
+  },
+>(threads: readonly T[], options: { unreadToTop: boolean }): T[] {
+  if (!options.unreadToTop) {
+    return sortByCreatedAtDescending(threads);
+  }
+  const unread: T[] = [];
+  const read: T[] = [];
+  for (const thread of threads) {
+    (thread.isUnread ? unread : read).push(thread);
+  }
+  return [
+    ...sortByCreatedAtDescending(unread),
+    ...sortByCreatedAtDescending(read),
+  ];
+}
+
 export function threadDisplayTitle(thread: PluginSidebarThread): string {
   const title = thread.title?.trim();
   if (title) return title;
