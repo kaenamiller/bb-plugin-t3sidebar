@@ -17,6 +17,15 @@
   }
 }
 
+@keyframes t3-shimmer-glow-flow {
+  from {
+    background-position: 200% center;
+  }
+  to {
+    background-position: 0% center;
+  }
+}
+
 @keyframes t3-shimmer-sweep {
   from {
     transform: translateX(-160%);
@@ -50,21 +59,25 @@
   animation: t3-shimmer-beam 2.4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
 }
 
-/* Variant 2: a wider, softer glow — ambient pulse across the card. */
+/* Variant 2: full-card gradient flow — always lit, peak travels continuously. */
 .t3-working-shimmer-glow .t3-working-shimmer-layer {
-  width: 92%;
+  inset: 0;
+  width: auto;
   filter: blur(12px);
+  will-change: background-position;
+  transform: none;
   background: linear-gradient(
     90deg,
-    transparent 0%,
-    oklch(1 0 0 / 0.04) 18%,
-    oklch(1 0 0 / 0.09) 34%,
+    oklch(1 0 0 / 0.035) 0%,
+    oklch(1 0 0 / 0.06) 18%,
+    oklch(1 0 0 / 0.1) 36%,
     oklch(1 0 0 / 0.13) 50%,
-    oklch(1 0 0 / 0.09) 66%,
-    oklch(1 0 0 / 0.04) 82%,
-    transparent 100%
+    oklch(1 0 0 / 0.1) 64%,
+    oklch(1 0 0 / 0.06) 82%,
+    oklch(1 0 0 / 0.035) 100%
   );
-  animation: t3-shimmer-sweep 3.2s ease-in-out infinite;
+  background-size: 200% 100%;
+  animation: t3-shimmer-glow-flow 2.5s linear infinite;
 }
 
 /* Variant 3: stacked hard-edge bands — a multi-stripe sheen sweep. */
@@ -151,6 +164,7 @@
   .t3-working-shimmer-sheen-track {
     animation: none;
     transform: none;
+    background-position: 50% center;
     opacity: 0.35;
   }
 }
